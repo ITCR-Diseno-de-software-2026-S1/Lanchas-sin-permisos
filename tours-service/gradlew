@@ -1,0 +1,5 @@
+#!/bin/sh
+# Gradle wrapper — generated automatically.
+# Run `gradle wrapper` in tours-service to regenerate the full binary wrapper.
+
+exec gradle "$@"

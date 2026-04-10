@@ -1,0 +1,73 @@
+name: CI — Lancha Tours Monorepo
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── tours-service ──────────────────────────────────────────────────────────
+  tours-service-test:
+    name: Tours Service — Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x tours-service/gradlew
+
+      - name: Run tests
+        working-directory: tours-service
+        run: ./gradlew test
+
+      - name: Build shadow JAR
+        working-directory: tours-service
+        run: ./gradlew shadowJar
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tours-service-jar
+          path: tours-service/build/libs/*-all.jar
+          retention-days: 7
+
+  # ── frontend ───────────────────────────────────────────────────────────────
+  frontend-build:
+    name: Frontend — Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 7

@@ -1,0 +1,6 @@
+// Root build file - only shared plugin declarations
+// Each microservice manages its own dependencies independently
+plugins {
+    id 'io.micronaut.application' version '4.4.2' apply false
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+}
