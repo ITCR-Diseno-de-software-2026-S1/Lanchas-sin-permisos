@@ -31,7 +31,7 @@ scripts\run-tours.cmd     ← Windows
 ./scripts/run-tours.sh    ← Linux/Mac
 ```
 
-El servicio arranca en `http://localhost:8080`.  
+El servicio arranca en `http://localhost:8081`.  
 La primera ejecución descarga dependencias (~80 MB). Las siguientes son inmediatas.
 
 ### 2 — Iniciar el frontend (terminal separada)
@@ -47,15 +47,15 @@ Frontend disponible en `http://localhost:3000`.
 
 ```bash
 # Crear un tour
-curl -X POST http://localhost:8080/tours \
+curl -X POST http://localhost:8081/tours \
   -H "Content-Type: application/json" \
   -d '{"name":"Tour Manglares","location":"Puntarenas","price":45.00,"guideName":"Don Carlos","availableSpots":10}'
 
 # Listar todos los tours
-curl http://localhost:8080/tours
+curl http://localhost:8081/tours
 
 # Filtrar por ubicación
-curl "http://localhost:8080/tours?location=puntarenas"
+curl "http://localhost:8081/tours?location=puntarenas"
 ```
 
 ### 4 — Ejecutar los tests
@@ -104,7 +104,7 @@ lancha-tours/
 │   │       ├── TourCard.jsx
 │   │       ├── TourList.jsx
 │   │       └── CreateTourForm.jsx
-│   └── vite.config.js               ← Proxy /api/tours → :8080
+│   └── vite.config.js               ← Proxy /api/tours → :8081
 │
 └── scripts/
     ├── run-tours.cmd / .sh
@@ -161,7 +161,7 @@ GET /tours?location=puntarenas
 │                                                  │
 │  ┌──────────────────┐    HTTP     ┌───────────┐  │
 │  │  tours-service   │◄────────────│ Frontend  │  │
-│  │  :8080           │             │ :3000     │  │
+│  │  :8081           │             │ :3000     │  │
 │  │  Micronaut + H2  │             │ React     │  │
 │  └──────────────────┘             └───────────┘  │
 │                                                  │

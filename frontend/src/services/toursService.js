@@ -1,10 +1,36 @@
 /**
  * toursService.js
- * All HTTP calls to the Tours microservice (port 8080) go through this module.
- * The Vite proxy rewrites /api/tours → http://localhost:8080/tours in dev.
+ * En desarrollo (npm run dev) el navegador llama directo a Micronaut: evita cuelgues del proxy Vite en Windows.
+ * En preview/build se usa /api/tours y el proxy de Vite (vite.config.js).
  */
+const BASE_URL = import.meta.env.DEV
+  ? 'http://127.0.0.1:8081/tours'
+  : '/api/tours'
 
-const BASE_URL = '/api/tours'
+/** Primer arranque del JAR (Hibernate/H2) puede tardar en PCs lentos o con antivirus escaneando el JAR. */
+const REQUEST_MS = 60000
+
+async function fetchWithTimeout(url, options = {}) {
+  const ctrl = new AbortController()
+  const t = setTimeout(() => ctrl.abort(), REQUEST_MS)
+  try {
+    return await fetch(url, { ...options, signal: ctrl.signal })
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      throw new Error(
+        'La petición tardó demasiado. Arranca el backend (puerto 8081): en tours-service ejecuta mvnw.cmd package -DskipTests y luego java -jar target\\tours-service-1.0.0-all.jar'
+      )
+    }
+    if (e instanceof TypeError) {
+      throw new Error(
+        'No hay conexión con http://127.0.0.1:8081. Abre otra terminal, levanta tours-service y recarga esta página.'
+      )
+    }
+    throw e
+  } finally {
+    clearTimeout(t)
+  }
+}
 
 /**
  * GET /tours[?location=<keyword>]
@@ -13,7 +39,7 @@ const BASE_URL = '/api/tours'
  */
 export async function fetchTours(location = '') {
   const url = location ? `${BASE_URL}?location=${encodeURIComponent(location)}` : BASE_URL
-  const res = await fetch(url, { headers: { Accept: 'application/json' } })
+  const res = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } })
   if (!res.ok) throw new Error(`Error al cargar tours: ${res.status}`)
   return res.json()
 }
@@ -24,7 +50,7 @@ export async function fetchTours(location = '') {
  * @returns {Promise<Object>} created tour
  */
 export async function createTour(data) {
-  const res = await fetch(BASE_URL, {
+  const res = await fetchWithTimeout(BASE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(data),

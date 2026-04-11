@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react'
 /** Misma regla en dev y preview: el navegador llama al mismo origen y Vite reenvía a Micronaut. */
 const toursApiProxy = {
   '/api/tours': {
-    target: 'http://localhost:8080',
+    // 127.0.0.1 evita colgues en Windows cuando "localhost" resuelve a ::1 y el JVM escucha solo en IPv4
+    target: 'http://127.0.0.1:8081',
     changeOrigin: true,
     rewrite: (path) => path.replace(/^\/api\/tours/, '/tours'),
   },

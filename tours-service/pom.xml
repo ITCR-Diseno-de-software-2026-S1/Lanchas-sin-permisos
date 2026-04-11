@@ -65,6 +65,12 @@
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- Sin esto, el fat JAR no incluye SnakeYAML → no se lee application.yml → sin DataSource → 500 en /tours -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Test -->
         <dependency>

@@ -44,7 +44,7 @@ export default function App() {
             <div className="hidden md:flex flex-col items-end gap-1.5">
               <div className="tag text-ocean-400">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse" />
-                tours-service :8080
+                tours-service :8081
               </div>
               <span className="text-xs text-ocean-600 font-mono">Micronaut + H2</span>
             </div>
