@@ -7,50 +7,31 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.validation.Validated;
 import jakarta.validation.Valid;
-
 import java.util.List;
 
-/**
- * REST controller for the Tours microservice.
- *
- * Responsibilities:
- *  - HTTP binding only (routes, status codes, response wrapping)
- *  - Delegates ALL business logic to TourService
- *  - Never accesses the repository directly
- */
 @Controller("/tours")
 @Validated
 public class TourController {
 
-    private final TourService tourService;
+    private final TourService service;
 
-    public TourController(TourService tourService) {
-        this.tourService = tourService;
+    public TourController(TourService service) {
+        this.service = service;
     }
 
-    /**
-     * POST /tours
-     * Creates a new boat tour.
-     * Returns HTTP 201 Created with the persisted tour in the body.
-     */
+    /** POST /tours — crea un tour nuevo */
     @Post
-    public HttpResponse<TourResponse> createTour(@Body @Valid CreateTourRequest request) {
-        TourResponse created = tourService.createTour(request);
-        return HttpResponse.created(created);
+    public HttpResponse<TourResponse> create(@Body @Valid CreateTourRequest req) {
+        return HttpResponse.created(service.create(req));
     }
 
-    /**
-     * GET /tours
-     * Lists all active tours. Optionally filtered by ?location=<keyword>.
-     */
+    /** GET /tours[?location=x] — lista tours activos */
     @Get
-    public HttpResponse<List<TourResponse>> listTours(
+    public HttpResponse<List<TourResponse>> list(
             @QueryValue(defaultValue = "") String location) {
-
-        List<TourResponse> tours = location.isBlank()
-            ? tourService.listActiveTours()
-            : tourService.findByLocation(location);
-
-        return HttpResponse.ok(tours);
+        List<TourResponse> result = location.isBlank()
+            ? service.listAll()
+            : service.findByLocation(location);
+        return HttpResponse.ok(result);
     }
 }
