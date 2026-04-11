@@ -2,6 +2,7 @@ package com.lanchaTours.tours.controller;
 
 import com.lanchaTours.tours.dto.CreateTourRequest;
 import com.lanchaTours.tours.dto.TourResponse;
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -36,8 +37,8 @@ class TourControllerTest {
         client.toBlocking().exchange(
             HttpRequest.POST("/tours", req("Laguna Arenal", "Alajuela", new BigDecimal("60.00"))),
             TourResponse.class);
-        HttpResponse<List> res = client.toBlocking()
-            .exchange(HttpRequest.GET("/tours"), List.class);
+        HttpResponse<List<TourResponse>> res = client.toBlocking()
+            .exchange(HttpRequest.GET("/tours"), Argument.listOf(TourResponse.class));
         assertEquals(HttpStatus.OK, res.getStatus());
         assertFalse(res.body().isEmpty());
     }
@@ -47,8 +48,8 @@ class TourControllerTest {
         client.toBlocking().exchange(
             HttpRequest.POST("/tours", req("Manglares Quepos", "Quepos", new BigDecimal("35.00"))),
             TourResponse.class);
-        HttpResponse<List> res = client.toBlocking()
-            .exchange(HttpRequest.GET("/tours?location=quepos"), List.class);
+        HttpResponse<List<TourResponse>> res = client.toBlocking()
+            .exchange(HttpRequest.GET("/tours?location=quepos"), Argument.listOf(TourResponse.class));
         assertEquals(HttpStatus.OK, res.getStatus());
         assertFalse(res.body().isEmpty());
     }

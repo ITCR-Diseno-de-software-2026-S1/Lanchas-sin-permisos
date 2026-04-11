@@ -24,8 +24,6 @@ datasources:
     driverClassName: org.h2.Driver
     username: sa
     password: ""
-    schema-generate: CREATE_DROP
-    dialect: H2
 
 jpa:
   default:
@@ -35,4 +33,5 @@ jpa:
       hibernate:
         hbm2ddl:
           auto: update
+        dialect: org.hibernate.dialect.H2Dialect
         show_sql: false

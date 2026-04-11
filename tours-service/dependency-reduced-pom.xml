@@ -4,7 +4,7 @@
     <artifactId>micronaut-parent</artifactId>
     <groupId>io.micronaut.platform</groupId>
     <version>4.7.6</version>
-    <relativePath>../../../../../../../Documents/TEC/D/Ejercicio 6/lancha-tours-monorepo/lancha-tours-monorepo/pom.xml/pom.xml</relativePath>
+    <relativePath>../pom.xml/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.lanchaTours</groupId>
@@ -21,6 +21,28 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <release>21</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>io.micronaut</groupId>
+              <artifactId>micronaut-inject-java</artifactId>
+              <version>${micronaut.core.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut.data</groupId>
+              <artifactId>micronaut-data-processor</artifactId>
+              <version>${micronaut.data.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut.serde</groupId>
+              <artifactId>micronaut-serde-processor</artifactId>
+              <version>${micronaut.serde.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut.validation</groupId>
+              <artifactId>micronaut-validation-processor</artifactId>
+              <version>${micronaut.validation.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
