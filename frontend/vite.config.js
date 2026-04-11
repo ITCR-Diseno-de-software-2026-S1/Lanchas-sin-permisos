@@ -15,10 +15,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    strictPort: true,
     proxy: toursApiProxy,
   },
   // Sin esto, `npm run build` + `vite preview` sirve el front pero /api/tours no existe → "no conectan".
   preview: {
+    strictPort: true,
     proxy: toursApiProxy,
   },
 })

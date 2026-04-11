@@ -1,11 +1,9 @@
 /**
  * toursService.js
- * En desarrollo (npm run dev) el navegador llama directo a Micronaut: evita cuelgues del proxy Vite en Windows.
- * En preview/build se usa /api/tours y el proxy de Vite (vite.config.js).
+ * Siempre mismo origen que Vite: /api/tours → proxy a Micronaut (vite.config.js).
+ * Evita CORS: llamar a :8081 desde :3000 falla en el navegador como TypeError ("Failed to fetch").
  */
-const BASE_URL = import.meta.env.DEV
-  ? 'http://127.0.0.1:8081/tours'
-  : '/api/tours'
+const BASE_URL = '/api/tours'
 
 /** Primer arranque del JAR (Hibernate/H2) puede tardar en PCs lentos o con antivirus escaneando el JAR. */
 const REQUEST_MS = 60000
@@ -23,7 +21,7 @@ async function fetchWithTimeout(url, options = {}) {
     }
     if (e instanceof TypeError) {
       throw new Error(
-        'No hay conexión con http://127.0.0.1:8081. Abre otra terminal, levanta tours-service y recarga esta página.'
+        'No se pudo llegar a la API (proxy /api/tours → :8081). Arranca tours-service en 8081 y usa npm run dev o npm run preview.'
       )
     }
     throw e

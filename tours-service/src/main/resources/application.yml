@@ -7,6 +7,8 @@ micronaut:
       enabled: true
       configurations:
         frontend:
+          # Cualquier puerto en loopback (p. ej. Vite en 3001 si 3000 está ocupado)
+          allowed-origins-regex: '^http://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$'
           allowed-origins:
             - "http://localhost:3000"
             - "http://127.0.0.1:3000"
